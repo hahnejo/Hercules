@@ -1,5 +1,6 @@
 FROM debian
 
-RUN apt-get update -y && \
-    apt-get upgrade -y && \
-    apt-get install vim && \
+RUN apt-get -y update && \
+    apt-get -yq install \
+        vim \
+        openssh-server

@@ -49,7 +49,7 @@ int     main(int argc, char **argv)
         return (-1);
 
     // remote server connection
-    address.sin_addr.s_addr = (long)inet_addr(INADDR_ANY);
+    address.sin_addr.s_addr = INADDR_ANY;
     address.sin_family = AF_INET;
     address.sin_port = htons(PORT);
 

@@ -15,6 +15,9 @@
 #include <netinet/in.h>
 #include <string.h>
 
+#define PORT 4242
+#define MAX 1024
+
 int     create_socket(int socket_fd)
 {
     if (socket_fd == -1)
@@ -37,24 +40,25 @@ int     main(int argc, char **argv)
     int new_socket;
     int addr_len;
     int val_read;
-    struct sockaddr_in server;
-    char buf[1024] = {0};
-    addr_len = sizeof(server);
+    char *temp_arg = "Hello! I am server. Nice to meet you.\n";
+    struct sockaddr_in address;
+    char buf[MAX] = {0};
+    addr_len = sizeof(address);
     socket_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (create_socket(socket_fd) == -1)
         return (-1);
 
     // remote server connection
-    server.sin_addr.s_addr = inet_addr(INADDR_ANY);
-    server.family = AF_INET;
-    server.sin_port = htons(80);
+    address.sin_addr.s_addr = (long)inet_addr(INADDR_ANY);
+    address.sin_family = AF_INET;
+    address.sin_port = htons(PORT);
 
-    if (connect(socket_fd, (struct sockaddr *)&server, sizeof(server)) < 0)
+    if (connect(socket_fd, (struct sockaddr *)&address, sizeof(address)) < 0)
     {
         printf("connection error\n");
         return (-1);
     }
-    if (bind(socket_fd, (struct sockaddr *)&server, sizeof(server)) < 0)
+    if (bind(socket_fd, (struct sockaddr *)&address, sizeof(address)) < 0)
     {
         printf("bind failed\n");
         return (-1);
@@ -64,13 +68,18 @@ int     main(int argc, char **argv)
         printf("listen failed\n");
         return (-1);
     }
-    new_socket = accept(socket_fd, (struct sockaddr *)&server, (socklen_t *)&addr_len);
-    if ((new_socket < 0)
+    new_socket = accept(socket_fd, (struct sockaddr *)&address, (socklen_t *)&addr_len);
+    if (new_socket < 0)
     {
         printf("accept failed\n");
         return (-1);
     }
-    val_read = read()
+    val_read = read(new_socket, buf, MAX);
+    printf("%s\n", buf);
+    if (argc == 2)
+        send(new_socket, argv[1], strlen(argv[1]), 0);
+    else
+        send(new_socket, temp_arg, strlen(temp_arg), 0);
     printf("connected\n");
     return (0);
 }

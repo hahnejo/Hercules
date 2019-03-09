@@ -28,6 +28,29 @@ int     create_socket(int socket_fd)
     return (0);
 }
 
+void    chat(int socket_fd)
+{
+    char buf[MAX];
+    int n;
+    while (1)
+    {
+        memset(buf, '0', MAX);
+        read(socket_fd, buf, sizeof(buf));
+        printf("client says : %s\n", buf);
+        memset(buf, '0', MAX);
+        n = 0;
+        while (buf[n] != '\n')
+        {
+            buf[n] = getchar()
+        }
+        if (strcmp("exit", buf) == 0)
+        {
+            printf("adios!\n");
+            break;
+        }
+    }
+}
+
 // socket ( addr family, type, protocol )
 // SOCK_STREAM = connection oriented TCP protocol
 
@@ -74,12 +97,10 @@ int     main(int argc, char **argv)
         printf("accept failed\n");
         return (-1);
     }
-    val_read = read(new_socket, buf, MAX);
-    printf("%s\n", buf);
-    if (argc == 2)
-        send(new_socket, argv[1], strlen(argv[1]), 0);
-    else
-        send(new_socket, temp_arg, strlen(temp_arg), 0);
+    // printf("%s\n", buf);
+    // send(new_socket, temp_arg, strlen(temp_arg), 0);
     printf("connected\n");
+    chat(socket_fd);
+    close(socket_fd);
     return (0);
 }

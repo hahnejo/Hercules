@@ -39,10 +39,8 @@ void    chat(int socket_fd)
         printf("client says : %s\n", buf);
         memset(buf, '0', MAX);
         n = 0;
-        while (buf[n] != '\n')
-        {
-            buf[n] = getchar()
-        }
+        while ((buf[n++] = getchar()) != '\n')
+            ;
         if (strcmp("exit", buf) == 0)
         {
             printf("adios!\n");
@@ -76,11 +74,11 @@ int     main(int argc, char **argv)
     address.sin_family = AF_INET;
     address.sin_port = htons(PORT);
 
-    if (connect(socket_fd, (struct sockaddr *)&address, sizeof(address)) < 0)
-    {
-        printf("connection error\n");
-        return (-1);
-    }
+    // if (connect(socket_fd, (struct sockaddr *)&address, sizeof(address)) < 0)
+    // {
+    //     printf("connection error\n");
+    //     return (-1);
+    // }
     if (bind(socket_fd, (struct sockaddr *)&address, sizeof(address)) < 0)
     {
         printf("bind failed\n");

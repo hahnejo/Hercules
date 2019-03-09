@@ -13,6 +13,34 @@
 #define PORT 4242
 #define MAX 1024
 
+void    chat(int socket_fd)
+{
+    char buf[MAX];
+    // char user_response[MAX];
+    int n;
+    while (1)
+    {
+        memset(buf, '0', sizeof(buf));
+        printf("What would you like to say?\n");
+        scanf("%s", buf);
+        if (buf[0])
+        {
+            n = 0;
+            while ((buf[n++] = getchar()) != '\n') 
+                ; 
+            write(socket_fd, buf, sizeof(buf));
+            memset(buf, '0', sizeof(buf));
+            read(socket_fd, buf, sizeof(buf));
+            printf("Server says : %s\n", buf);
+        }
+        if (strcmp(buf, "exit") == 0)
+        {
+            printf("Good bye!\n");
+            break ;
+        }    
+    }
+}
+
 int     main(int argc, char **argv)
 {
     struct sockaddr_in address;
